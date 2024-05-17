@@ -9,13 +9,13 @@ const Dishes = () => {
           </div>
           <div className="flex flex-wrap w-2/3">
             <div className="w-1/3 p-2">
-              <img src="../assets/burger.jpg" alt="Burger" className="w-full h-auto object-cover" />
+              <img src="../../public/burger.jpg" alt="Burger" className="w-full h-auto object-cover" />
             </div>
             <div className="w-1/3 p-2">
-              <img src="../assets/burger.jpg" alt="Burger" className="w-full h-auto object-cover" />
+              <img src="../../public/burger.jpg" alt="Burger" className="w-full h-auto object-cover" />
             </div>
             <div className="w-1/3 p-2">
-              <img src="../assets/burger.jpg" alt="Burger" className="w-full h-auto object-cover" />
+              <img src="../../public/burger.jpg" alt="Burger" className="w-full h-auto object-cover" />
             </div>
           </div>
         </div>

@@ -1,10 +1,10 @@
 const Header = () => {
   return (
-    <header className="bg-cover h-screen" style={{ backgroundImage: "url('bg.jpg')" }}>
+    <header className="bg-cover h-screen" style={{ backgroundImage: "url('../../public/bg.jpg')" }}>
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between py-6">
           <div className="flex items-center">
-            <img src="../assets/logo.png" alt="Logo" className="h-12" />
+            <img src="../../public/logo.png" alt="Logo" className="h-12" />
           </div>
           <nav className="hidden md:flex space-x-6">
             <a href="menu.html" className="text-white text-lg font-bold hover:text-red-500">МЕНЮ</a>
