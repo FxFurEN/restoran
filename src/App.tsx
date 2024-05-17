@@ -17,19 +17,16 @@ const App = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card 
-              image="./assets/1c.jpg" 
               title="Натуральные продукты" 
               span="Eco" 
               description="Продукты использованные в ресторане на 100% натуральные и без ГМО." 
             />
             <Card 
-              image="../../public/2.jpg" 
               title="Авторские рецепты" 
               span="Recipes" 
               description="Наши повара предлагают вам отведать лучшие грузинские блюда по авторским рецептам." 
             />
             <Card 
-              image="./assets/3.jpg" 
               title="Уникальные вина" 
               span="Wines" 
               description="У нас широкий ассортимент уникальных грузинских вин, которые можно попробовать только у нас." 
