@@ -1,3 +1,5 @@
+import { MenuOutlined, PhoneOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+
 const Header = () => {
   return (
     <header className="bg-cover h-screen" style={{ backgroundImage: "url('../../public/bg.jpg')" }}>
@@ -12,17 +14,17 @@ const Header = () => {
             <a href="otzivi.html" className="text-white text-lg font-bold hover:text-red-500">ОТЗЫВЫ</a>
           </nav>
           <div className="hidden md:flex items-center space-x-4">
-            <a href="cart.html">
-              <img src="cart.png" alt="Cart" className="h-8" />
+            <a href="cart.html" className="text-white">
+                <ShoppingCartOutlined className="h-8"/>
             </a>
             <div className="text-white">
-              <img src="phone.png" alt="Phone" className="inline-block h-8 mr-2" />
+            <PhoneOutlined />
               <a href="tel:+77713735436" className="font-bold hover:text-red-500">+7 771 373 54 36</a>
             </div>
             <a href="bron.html" className="bg-orange-500 text-white px-4 py-2 rounded-md font-bold hover:bg-orange-700">ЗАБРОНИРОВАТЬ СТОЛ</a>
           </div>
-          <button className="md:hidden">
-            <img src="../assets/burger.jpg" alt="Burger Menu" className="h-8" />
+          <button className="md:hidden text-white text-2xl">
+            <MenuOutlined />
           </button>
         </div>
       </div>
