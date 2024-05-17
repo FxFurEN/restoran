@@ -23,8 +23,8 @@ const Header = () => {
             <img src="../../public/logo.png" alt="Logo" className="h-12" />
           </div>
           <nav className="hidden md:flex space-x-6">
-            <a href="menu.html" className="text-white text-lg font-bold hover:text-red-500">МЕНЮ</a>
-            <a href="about.html" className="text-white text-lg font-bold hover:text-red-500">О НАС</a>
+            <a href="#menu" className="text-white text-lg font-bold hover:text-red-500">МЕНЮ</a>
+            <a href="#about" className="text-white text-lg font-bold hover:text-red-500">О НАС</a>
             <Link to="/reviews" className="text-white text-lg font-bold hover:text-red-500">ОТЗЫВЫ</Link>
           </nav>
           <div className="hidden md:flex items-center space-x-4">

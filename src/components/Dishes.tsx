@@ -36,7 +36,7 @@ const Dishes = () => {
   ));
 
   return (
-    <section className="py-16">
+    <section id="menu" className="py-16">
       <div className="container mx-auto px-6">
         <h2 className="text-4xl font-bold text-center">Наше <span className="text-orange-500">Меню</span></h2>
         <div className="mt-8">

@@ -1,6 +1,6 @@
 const History = () => {
   return (
-    <section className="my-16">
+    <section id="about" className="my-16">
       <div className="container mx-auto px-6">
         <div className="text-center">
           <h2 className="text-4xl font-bold">Наша <span className="text-orange-500">История</span></h2>
