@@ -1,7 +1,20 @@
+import { useState } from "react";
 import { MenuOutlined, PhoneOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import ReservationModal from "./ReservationModal"; 
+import { Button } from "antd";
 
 const Header = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
+
   return (
     <header className="bg-cover h-screen" style={{ backgroundImage: "url('../../public/bg.jpg')" }}>
       <div className="container mx-auto px-6">
@@ -22,13 +35,14 @@ const Header = () => {
             <PhoneOutlined />
               <a href="tel:+77713735436" className="font-bold hover:text-red-500">+7 771 373 54 36</a>
             </div>
-            <a href="bron.html" className="bg-orange-500 text-white px-4 py-2 rounded-md font-bold hover:bg-orange-700">ЗАБРОНИРОВАТЬ СТОЛ</a>
+            <Button className="bg-orange-500 text-black border-0" onClick={showModal}>ЗАБРОНИРОВАТЬ СТОЛ</Button>
           </div>
           <button className="md:hidden text-white text-2xl">
             <MenuOutlined />
           </button>
         </div>
       </div>
+      <ReservationModal visible={modalVisible} onCancel={handleCancel} />
     </header>
   );
 };
