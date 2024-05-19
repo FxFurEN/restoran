@@ -1,58 +1,85 @@
 import { useState } from "react";
-import { Modal, Input, Button, Empty } from "antd";
+import { Modal, Input, Button, notification, Form, Card } from "antd";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient("https://waccszgdudorjiexqdno.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhY2NzemdkdWRvcmppZXhxZG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxNDc4MDMsImV4cCI6MjAzMTcyMzgwM30.xo0EOC0iTdQqiHsVs5FPJc-bvl7I2Vmv_y0tRgaKMRc");
 
 const ReservationModal = ({ visible, onCancel }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState(""); 
-  const [email, setEmail] = useState(""); 
+  const [form] = Form.useForm();
 
-  const handleOk = () => {
-    // Здесь можно добавить логику для обработки бронирования
+  const handleFinish = async (values) => {
     setConfirmLoading(true);
-    setTimeout(() => {
-      setConfirmLoading(false);
-      onCancel();
-    }, 2000);
-  };
+    const { fullName, phone, email } = values;
 
-  const handleCancel = () => {
-    onCancel(); 
+    const { data, error } = await supabase
+      .from('delivery_table')
+      .insert([
+        { full_name: fullName, phone, email }
+      ]);
+
+    if (error) {
+      notification.error({
+        message: 'Ошибка',
+        description: 'Произошла ошибка при бронировании. Пожалуйста, попробуйте снова.',
+      });
+      console.error('Error inserting data:', error);
+    } else {
+      notification.success({
+        message: 'Успешно',
+        description: 'Ваш столик успешно забронирован.',
+      });
+      console.log('Data inserted successfully:', data);
+    }
+
+    setConfirmLoading(false);
+    onCancel();
   };
 
   return (
     <Modal
       title="Забронировать стол"
-      open={visible}
-      onOk={handleOk}
+      visible={visible}
       confirmLoading={confirmLoading}
-      onCancel={handleCancel}
+      onCancel={onCancel}
       footer={[
-        <Button key="back" onClick={handleOk} loading={confirmLoading} className="bg-orange-500 text-black border-0">
+        <Button key="back" onClick={() => form.submit()} loading={confirmLoading} className="bg-orange-500 text-black border-0">
           Забронировать
         </Button>
       ]}
     >
-      <div>
-        <h2 className="text-xl font-bold">Оставьте свои контакты для того, чтобы мы могли свами связаться:</h2>
-        <Input
-          placeholder="Ваше ФИО"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ marginBottom: "10px" }}
-        />
-        <Input
-          placeholder="Номер телефона"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          style={{ marginBottom: "10px" }}
-        />
-        <Input
-          placeholder="Почта"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
+      <Card className="w-full rounded-lg">
+        <Form
+          form={form}
+          name="reservationForm"
+          layout="vertical"
+          onFinish={handleFinish}
+        >
+          <Form.Item
+            name="fullName"
+            label="ФИО"
+            rules={[{ required: true, message: 'Пожалуйста, введите ваше ФИО!' }]}
+          >
+            <Input placeholder="Введите ваше ФИО" />
+          </Form.Item>
+
+          <Form.Item
+            name="phone"
+            label="Номер телефона"
+            rules={[{ required: true, message: 'Пожалуйста, введите ваш номер телефона!' }]}
+          >
+            <Input placeholder="Введите ваш номер телефона" />
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            label="Почта"
+            rules={[{ required: true, message: 'Пожалуйста, введите вашу почту!' }]}
+          >
+            <Input placeholder="Введите вашу почту" />
+          </Form.Item>
+        </Form>
+      </Card>
     </Modal>
   );
 };
