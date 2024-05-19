@@ -2,7 +2,7 @@ import { FacebookOutlined, InstagramOutlined, TwitterOutlined } from "@ant-desig
 
 const Footer = () => {
   return (
-    <footer className="bg-black py-6">
+    <footer id="contact" className="bg-black py-6">
       <div className="container mx-auto px-6 text-white">
         <div className="flex flex-col lg:flex-row justify-between items-center">
           <div className="mb-6 lg:mb-0 lg:w-1/2">
