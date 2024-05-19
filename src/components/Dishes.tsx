@@ -27,7 +27,7 @@ const Dishes = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const dishes = Array.from({ length: 35 }, (_, index) => `${index + 1}.jpg`);
+  const dishes = Array.from({ length: 4 }, (_, index) => `${index + 1}.jpg`);
 
   const carouselItems = dishes.map((dish, index) => (
     <div key={index}>
