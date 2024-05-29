@@ -12,6 +12,6 @@ CREATE TABLE delivery_table (
         full_name VARCHAR(100) NOT NULL,
         phone VARCHAR(20) NOT NULL,
         email VARCHAR(20) NOT NULL,
-        address TEXT NOT NULL,
+        num_of_people INT NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
 );
