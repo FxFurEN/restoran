@@ -16,13 +16,16 @@ const ReservationModal = ({ visible, onCancel }) => {
   const handleFinish = async (values) => {
     setConfirmLoading(true);
     const { snacks, fullName, phone, address } = values;
-
+  
+    // Объединяем выбранные блюда в одну строку с разделителем ', '
+    const snacksString = snacks.join(', ');
+  
     const { data, error } = await supabase
       .from('delivery_orders')
-      .insert(
-        snacks.map(snack => ({ snack, full_name: fullName, phone, address }))
-      );
-
+      .insert([
+        { snack: snacksString, full_name: fullName, phone, address }
+      ]);
+  
     if (error) {
       notification.error({
         message: 'Ошибка',
@@ -36,7 +39,7 @@ const ReservationModal = ({ visible, onCancel }) => {
       });
       console.log('Data inserted successfully:', data);
     }
-
+  
     setConfirmLoading(false);
     onCancel();
   };
