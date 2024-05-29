@@ -2,20 +2,30 @@ import { useState } from "react";
 import { Modal, Input, Button, notification, Form, Card } from "antd";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient("https://waccszgdudorjiexqdno.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhY2NzemdkdWRvcmppZXhxZG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxNDc4MDMsImV4cCI6MjAzMTcyMzgwM30.xo0EOC0iTdQqiHsVs5FPJc-bvl7I2Vmv_y0tRgaKMRc");
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL!;
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY!;
 
-const ReservationModal = ({ visible, onCancel }) => {
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+interface ReservationFormValues {
+  fullName: string;
+  phone: string;
+  email: string;
+  numOfPeople: number;
+}
+
+const ReservationModal = ({ visible, onCancel }: { visible: boolean; onCancel: () => void }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
 
-  const handleFinish = async (values) => {
+  const handleFinish = async (values: ReservationFormValues) => {
     setConfirmLoading(true);
-    const { fullName, phone, email } = values;
+    const { fullName, phone, email, numOfPeople } = values;
 
     const { data, error } = await supabase
       .from('delivery_table')
       .insert([
-        { full_name: fullName, phone, email }
+        { full_name: fullName, phone, email, num_of_people: numOfPeople }
       ]);
 
     if (error) {
@@ -77,6 +87,22 @@ const ReservationModal = ({ visible, onCancel }) => {
             rules={[{ required: true, message: 'Пожалуйста, введите вашу почту!' }]}
           >
             <Input placeholder="Введите вашу почту" />
+          </Form.Item>
+
+          <Form.Item
+            name="numOfPeople"
+            label="Количество человек"
+            rules={[
+              { required: true, message: 'Пожалуйста, введите количество человек!' },
+              {
+                validator: (_, value) => 
+                  value && value >= 1 && value <= 10
+                  ? Promise.resolve()
+                  : Promise.reject(new Error('Количество человек должно быть от 1 до 10!'))
+              }
+            ]}
+          >
+            <Input type="number" min={1} max={10} placeholder="Введите количество человек" />
           </Form.Item>
         </Form>
       </Card>
