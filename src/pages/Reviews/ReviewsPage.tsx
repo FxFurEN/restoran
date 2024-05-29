@@ -1,23 +1,58 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Avatar, Rate } from "antd";
+import { Avatar, Rate, Form, Input, Button, Spin, notification } from "antd";
 import { UserOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { createClient } from "@supabase/supabase-js";
+
+const { TextArea } = Input;
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const ReviewsPage = () => {
-  // Заглушечные отзывы для примера
-  const reviews = [
-    { id: 1, avatar: <Avatar icon={<UserOutlined />} />, rating: 4, comment: "Отличное заведение, всегда вкусно и уютно." },
-    { id: 2, avatar: <Avatar icon={<UserOutlined />} />, rating: 5, comment: "Прекрасное место, обязательно приду снова!" },
-    { id: 3, avatar: <Avatar icon={<UserOutlined />} />, rating: 3, comment: "Неплохое место, но цены могли бы быть ниже." },
-    { id: 4, avatar: <Avatar icon={<UserOutlined />} />, rating: 5, comment: "Отличный сервис и атмосфера, рекомендую!" },
-    { id: 5, avatar: <Avatar icon={<UserOutlined />} />, rating: 4, comment: "Хорошее место, порадовала кухня." },
-    { id: 6, avatar: <Avatar icon={<UserOutlined />} />, rating: 4, comment: "Все было великолепно, спасибо!" },
-    { id: 7, avatar: <Avatar icon={<UserOutlined />} />, rating: 5, comment: "Отличное качество еды, приятное обслуживание." },
-    { id: 8, avatar: <Avatar icon={<UserOutlined />} />, rating: 4, comment: "Понравилось, приду еще раз." },
-    { id: 9, avatar: <Avatar icon={<UserOutlined />} />, rating: 5, comment: "Идеальное место для вечернего отдыха." },
-    { id: 10, avatar: <Avatar icon={<UserOutlined />} />, rating: 4, comment: "Хороший выбор блюд, есть что попробовать." },
-  ];
-  
+  const [form] = Form.useForm();
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false); // Добавляем состояние загрузки для формы
 
+  const fetchReviews = async () => {
+    const { data, error } = await supabase.from('reviews').select('*');
+    if (error) {
+      console.error('Error fetching reviews:', error.message);
+    } else {
+      setReviews(data);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const handleFinish = async (values) => {
+    setLoading(true);
+    const { rating, comment } = values;
+    const { error } = await supabase.from('reviews').insert([{ rating, comment }]);
+    
+    if (error) {
+      console.error('Error inserting review:', error.message);
+      notification.error({
+        message: 'Ошибка добавления отзыва',
+        description: 'Произошла ошибка при добавлении отзыва. Пожалуйста, повторите попытку позже.',
+      });
+    } else {
+      // Предполагаем, что вставка прошла успешно и обновляем список отзывов
+      fetchReviews();
+      notification.success({
+        message: 'Отзыв добавлен',
+        description: 'Ваш отзыв был успешно добавлен. Спасибо за ваш отзыв!',
+      });
+      form.resetFields();
+    }
+    
+    setLoading(false);
+  };
+  
   return (
     <div className="container mx-auto px-6 py-6">
       <div className="flex items-center justify-between mb-4">
@@ -28,11 +63,11 @@ const ReviewsPage = () => {
       </div>
       <h2 className="text-4xl font-bold text-center mb-8">Отзывы</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {reviews.map((review) => (
+        {[...reviews].map((review) => (
           <div key={review.id} className="bg-white shadow-lg rounded-lg overflow-hidden p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
-                {review.avatar}
+                <Avatar icon={<UserOutlined />} />
                 <span className="ml-3 text-lg font-semibold">Пользователь</span>
               </div>
               <Rate disabled defaultValue={review.rating} />
@@ -40,6 +75,20 @@ const ReviewsPage = () => {
             <p className="text-gray-700">{review.comment}</p>
           </div>
         ))}
+      </div>
+      <div className="mt-8">
+        <h3 className="text-2xl font-bold mb-4">Оставить отзыв</h3>
+        <Form form={form} onFinish={handleFinish} layout="vertical">
+          <Form.Item name="rating" label="Оценка">
+            <Rate allowHalf />
+          </Form.Item>
+          <Form.Item name="comment" label="Комментарий">
+            <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading}>Отправить</Button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );

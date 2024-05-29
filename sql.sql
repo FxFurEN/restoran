@@ -15,3 +15,10 @@ CREATE TABLE delivery_table (
         num_of_people INT NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
 );
+
+
+CREATE TABLE reviews (
+  id SERIAL PRIMARY KEY,
+  rating INT NOT NULL,
+  comment TEXT NOT NULL
+);
