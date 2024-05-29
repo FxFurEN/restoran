@@ -14,7 +14,8 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const ReviewsPage = () => {
   const [form] = Form.useForm();
   const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(false); // Добавляем состояние загрузки для формы
+  const [loading, setLoading] = useState(false);
+  const [averageRating, setAverageRating] = useState(0); // Добавляем состояние для средней оценки
 
   const fetchReviews = async () => {
     const { data, error } = await supabase.from('reviews').select('*');
@@ -22,6 +23,7 @@ const ReviewsPage = () => {
       console.error('Error fetching reviews:', error.message);
     } else {
       setReviews(data);
+      calculateAverageRating(data); // Вызываем функцию вычисления средней оценки при получении отзывов
     }
   };
 
@@ -29,10 +31,22 @@ const ReviewsPage = () => {
     fetchReviews();
   }, []);
 
+  const calculateAverageRating = (data) => {
+    if (data.length === 0) {
+      setAverageRating(0);
+      return;
+    }
+
+    const totalRating = data.reduce((acc, curr) => acc + curr.rating, 0);
+    const avgRating = totalRating / data.length;
+    setAverageRating(avgRating);
+  };
+
   const handleFinish = async (values) => {
     setLoading(true);
     const { rating, comment } = values;
-    const { error } = await supabase.from('reviews').insert([{ rating, comment }]);
+    const { error } = await supabase.from('reviews').insert([{ rating: parseFloat(rating), comment }]);
+    console.log(rating, comment);
     
     if (error) {
       console.error('Error inserting review:', error.message);
@@ -41,7 +55,6 @@ const ReviewsPage = () => {
         description: 'Произошла ошибка при добавлении отзыва. Пожалуйста, повторите попытку позже.',
       });
     } else {
-      // Предполагаем, что вставка прошла успешно и обновляем список отзывов
       fetchReviews();
       notification.success({
         message: 'Отзыв добавлен',
@@ -62,6 +75,10 @@ const ReviewsPage = () => {
         </Link>
       </div>
       <h2 className="text-4xl font-bold text-center mb-8">Отзывы</h2>
+      <div className="mb-4">
+        <p className="text-lg font-semibold mb-2">Средняя оценка: {averageRating.toFixed(1)}</p>
+        <Rate disabled allowHalf defaultValue={averageRating} />
+      </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[...reviews].map((review) => (
           <div key={review.id} className="bg-white shadow-lg rounded-lg overflow-hidden p-6">
@@ -70,7 +87,7 @@ const ReviewsPage = () => {
                 <Avatar icon={<UserOutlined />} />
                 <span className="ml-3 text-lg font-semibold">Пользователь</span>
               </div>
-              <Rate disabled defaultValue={review.rating} />
+              <Rate allowHalf disabled value={review.rating} />
             </div>
             <p className="text-gray-700">{review.comment}</p>
           </div>
