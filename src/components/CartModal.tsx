@@ -15,7 +15,7 @@ const ReservationModal = ({ visible, onCancel }) => {
 
   const handleFinish = async (values) => {
     setConfirmLoading(true);
-    const { snacks, fullName, phone, address } = values;
+    const { snacks, fullName, phone, address, cardNumber  } = values;
   
     // Объединяем выбранные блюда в одну строку с разделителем ', '
     const snacksString = snacks.join(', ');
@@ -23,7 +23,7 @@ const ReservationModal = ({ visible, onCancel }) => {
     const { data, error } = await supabase
       .from('delivery_orders')
       .insert([
-        { snack: snacksString, full_name: fullName, phone, address }
+        { snack: snacksString, full_name: fullName, phone, address, card_number: cardNumber }
       ]);
   
     if (error) {
@@ -43,6 +43,18 @@ const ReservationModal = ({ visible, onCancel }) => {
     setConfirmLoading(false);
     onCancel();
   };
+
+  const formatCardNumber = (value) => {
+    // Удаляем все символы, кроме цифр
+    const cleanedValue = value.replace(/\D/g, '');
+    
+    // Добавляем тире после каждых 4 цифр
+    const formattedValue = cleanedValue.replace(/(\d{4})/g, '$1-');
+  
+    // Убираем последний лишний тире, если он есть
+    return formattedValue.replace(/-$/, '');
+  };
+
 
   return (
     <Modal
@@ -112,6 +124,26 @@ const ReservationModal = ({ visible, onCancel }) => {
             rules={[{ required: true, message: 'Пожалуйста, введите ваш адрес!' }]}
           >
             <Input.TextArea placeholder="Введите ваш адрес" />
+          </Form.Item>
+          <Form.Item
+            name="cardNumber"
+            label="Номер карты"
+            rules={[
+              { required: true, message: 'Пожалуйста, введите номер вашей карты!' },
+              { pattern: /^[0-9-]+$/, message: 'Номер карты должен состоять только из цифр и тире!' }
+            ]}
+          >
+            <Input
+              maxLength={19} // Максимальная длина 19 символов включая тире
+              placeholder="Введите номер вашей карты"
+              onChange={(e) => {
+                // Форматируем значение при каждом изменении
+                const value = e.target.value;
+                const formattedValue = formatCardNumber(value);
+                // Устанавливаем отформатированное значение в поле ввода
+                form.setFieldsValue({ cardNumber: formattedValue });
+              }}
+            />
           </Form.Item>
         </Form>
       </Card>

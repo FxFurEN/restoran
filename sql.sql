@@ -4,7 +4,8 @@ CREATE TABLE delivery_orders (
         full_name VARCHAR(100) NOT NULL,
         phone VARCHAR(20) NOT NULL,
         address TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW()
+        created_at TIMESTAMP DEFAULT NOW(),
+        card_number VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE delivery_table (
