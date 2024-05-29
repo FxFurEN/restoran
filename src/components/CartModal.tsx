@@ -4,7 +4,10 @@ import { createClient } from "@supabase/supabase-js";
 
 const { Option } = Select;
 
-const supabase = createClient("https://waccszgdudorjiexqdno.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhY2NzemdkdWRvcmppZXhxZG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYxNDc4MDMsImV4cCI6MjAzMTcyMzgwM30.xo0EOC0iTdQqiHsVs5FPJc-bvl7I2Vmv_y0tRgaKMRc");
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const ReservationModal = ({ visible, onCancel }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -12,13 +15,13 @@ const ReservationModal = ({ visible, onCancel }) => {
 
   const handleFinish = async (values) => {
     setConfirmLoading(true);
-    const { snack, fullName, phone, address } = values;
+    const { snacks, fullName, phone, address } = values;
 
     const { data, error } = await supabase
       .from('delivery_orders')
-      .insert([
-        { snack, full_name: fullName, phone, address }
-      ]);
+      .insert(
+        snacks.map(snack => ({ snack, full_name: fullName, phone, address }))
+      );
 
     if (error) {
       notification.error({
@@ -58,11 +61,14 @@ const ReservationModal = ({ visible, onCancel }) => {
           onFinish={handleFinish}
         >
           <Form.Item
-            name="snack"
+            name="snacks"
             label="Выберите закуску"
             rules={[{ required: true, message: 'Пожалуйста, выберите закуску!' }]}
           >
-            <Select placeholder="Выберите закуску">
+            <Select
+              placeholder="Выберите закуску"
+              mode="multiple"
+            >
               <Option value="khachapuri">Хачапури</Option>
               <Option value="khinkali">Хинкали</Option>
               <Option value="lobio">Лобио</Option>
