@@ -77,7 +77,6 @@ const ReviewsPage = () => {
       <h2 className="text-4xl font-bold text-center mb-8">Отзывы</h2>
       <div className="mb-4">
         <p className="text-lg font-semibold mb-2">Средняя оценка: {averageRating.toFixed(1)}</p>
-        <Rate disabled allowHalf defaultValue={averageRating} />
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[...reviews].map((review) => (
