@@ -1,4 +1,4 @@
-import { FacebookOutlined, InstagramOutlined, WhatsAppOutlined } from "@ant-design/icons";
+import { FacebookOutlined, InstagramOutlined, PhoneOutlined, WhatsAppOutlined } from "@ant-design/icons";
 
 const Footer = () => {
   return (
@@ -21,14 +21,16 @@ const Footer = () => {
               <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="text-white text-2xl hover:text-orange-500">
                 <FacebookOutlined />
               </a>
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="text-white text-2xl hover:text-orange-500">
+              <a href="https://www.instagram.com/hachapuri_grillhouse" target="_blank" rel="noopener noreferrer" className="text-white text-2xl hover:text-orange-500">
                 <InstagramOutlined />
               </a>
               <a href="https://www.whatsapp.com/?lang=ru_RU" target="_blank" rel="noopener noreferrer" className="text-white text-2xl hover:text-orange-500">
                 <WhatsAppOutlined />
-              </a>
+              </a>z
+              
             </div>
             <p className="text-gray-400">Все права защищены, 2024г.</p>
+              <a href="tel:+77713735436" className="font-bold hover:text-red-500">+7 771 373 54 36</a>
           </div>
         </div>
       </div>
