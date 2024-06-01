@@ -5,6 +5,7 @@ import BlackBlock from './components/BlackBlock';
 import Dishes from './components/Dishes';
 import Cook from './components/Cook';
 import Footer from './components/Footer';
+import DishesHot from './components/DishesHot';
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
         <History />
         <BlackBlock />
         <Dishes />
+        <DishesHot />
         <Cook />
         <Footer />
       </div>

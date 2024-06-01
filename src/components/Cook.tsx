@@ -8,7 +8,7 @@ const contentStyle: React.CSSProperties = {
 };
 
 const Cook = () => {
-  const employees = Array.from({ length: 3 }, (_, index) => `${index + 1}.jpg`);
+  const employees = Array.from({ length: 4 }, (_, index) => `${index + 1}.jpg`);
 
   const carouselItems = employees.map((employee, index) => (
     <div key={index}>
